@@ -13,6 +13,8 @@ test("renders the Pixel Nest game launcher", async () => {
   assert.match(html, /https:\/\/loopasam\.github\.io\/dinoland\//);
   assert.match(html, /https:\/\/loopasam\.github\.io\/doudou-battler\//);
   assert.match(html, /\/pixel-nest\/_next\/static\/css\//);
+  assert.equal((html.match(/class="game-slot /g) ?? []).length, 12);
+  assert.match(html, /Game 12/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 });
 
