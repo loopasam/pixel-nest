@@ -11,10 +11,13 @@ test("renders the Pixel Nest game launcher", async () => {
   assert.match(html, />Dinoland</);
   assert.match(html, />Doudou Battler</);
   assert.match(html, /https:\/\/loopasam\.github\.io\/dinoland\//);
-  assert.match(html, /https:\/\/loopasam\.github\.io\/doudou-battler\//);
+  assert.doesNotMatch(html, /https:\/\/loopasam\.github\.io\/doudou-battler\//);
   assert.match(html, /\/pixel-nest\/_next\/static\/css\//);
   assert.equal((html.match(/class="game-card /g) ?? []).length, 2);
-  assert.doesNotMatch(html, /Coming soon|Game 0[3-9]|Game 1[0-2]/);
+  assert.equal((html.match(/<a class="game-card game-card--live"/g) ?? []).length, 1);
+  assert.equal((html.match(/<article class="game-card game-card--upcoming"/g) ?? []).length, 1);
+  assert.match(html, />Upcoming<|>In development</);
+  assert.doesNotMatch(html, /Game 0[3-9]|Game 1[0-2]/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
 
   const stylesheetHref = html.match(/<link rel="stylesheet" href="([^"]+)"/)?.[1];
@@ -25,6 +28,8 @@ test("renders the Pixel Nest game launcher", async () => {
   const css = await readFile(new URL(`../dist/client/${artifactPath}`, import.meta.url), "utf8");
   assert.match(css, /\.game-grid/);
   assert.match(css, /grid-template-columns/);
+  assert.match(css, /\.game-card--upcoming/);
+  assert.match(css, /grayscale\((?:1)?\)/);
 });
 
 test("includes social sharing metadata", async () => {

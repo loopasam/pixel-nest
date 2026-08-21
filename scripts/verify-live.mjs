@@ -9,8 +9,11 @@ assert.match(pageResponse.headers.get("content-type") ?? "", /^text\/html\b/i);
 const html = await pageResponse.text();
 assert.equal((html.match(/class="game-card /g) ?? []).length, 2);
 assert.match(html, /https:\/\/loopasam\.github\.io\/dinoland\//);
-assert.match(html, /https:\/\/loopasam\.github\.io\/doudou-battler\//);
-assert.doesNotMatch(html, /Coming soon|Game 0[3-9]|Game 1[0-2]/);
+assert.doesNotMatch(html, /https:\/\/loopasam\.github\.io\/doudou-battler\//);
+assert.equal((html.match(/<a class="game-card game-card--live"/g) ?? []).length, 1);
+assert.equal((html.match(/<article class="game-card game-card--upcoming"/g) ?? []).length, 1);
+assert.match(html, />Upcoming<|>In development</);
+assert.doesNotMatch(html, /Game 0[3-9]|Game 1[0-2]/);
 
 const stylesheetHref = html.match(/<link rel="stylesheet" href="([^"]+)"/)?.[1];
 assert.ok(stylesheetHref, "Rendered page has no stylesheet link");
@@ -25,5 +28,7 @@ assert.equal(
 const css = await stylesheetResponse.text();
 assert.match(css, /\.game-grid/);
 assert.match(css, /grid-template-columns/);
+assert.match(css, /\.game-card--upcoming/);
+assert.match(css, /grayscale\((?:1)?\)/);
 
 console.log(`Live smoke test passed: ${siteUrl}`);
