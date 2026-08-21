@@ -13,9 +13,18 @@ test("renders the Pixel Nest game launcher", async () => {
   assert.match(html, /https:\/\/loopasam\.github\.io\/dinoland\//);
   assert.match(html, /https:\/\/loopasam\.github\.io\/doudou-battler\//);
   assert.match(html, /\/pixel-nest\/_next\/static\/css\//);
-  assert.equal((html.match(/class="game-slot /g) ?? []).length, 12);
+  assert.equal((html.match(/class="game-card /g) ?? []).length, 12);
   assert.match(html, /Game 12/);
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape/);
+
+  const stylesheetHref = html.match(/<link rel="stylesheet" href="([^"]+)"/)?.[1];
+  assert.ok(stylesheetHref, "Rendered page has no stylesheet link");
+  assert.match(stylesheetHref, /^\/pixel-nest\/_next\/static\/css\//);
+
+  const artifactPath = stylesheetHref.replace(/^\/pixel-nest\//, "");
+  const css = await readFile(new URL(`../dist/client/${artifactPath}`, import.meta.url), "utf8");
+  assert.match(css, /\.game-grid/);
+  assert.match(css, /grid-template-columns/);
 });
 
 test("includes social sharing metadata", async () => {
