@@ -13,37 +13,12 @@ const games = [
     href: "https://loopasam.github.io/doudou-battler/",
     image: "./games/doudou-battler.webp",
   },
-  ...Array.from({ length: 10 }, (_, index) => ({
-    number: String(index + 3).padStart(2, "0"),
-    title: `Game ${String(index + 3).padStart(2, "0")}`,
-    href: null,
-    image: null,
-  })),
 ];
 
 export const dynamic = "force-static";
 
 function GameCard({ game }: { game: (typeof games)[number] }) {
-  const content = (
-    <>
-      <div className="game-art">
-        {game.image ? (
-          <img src={game.image} alt="" />
-        ) : (
-          <div className="placeholder-art" aria-hidden="true">
-            <span>{game.number}</span>
-          </div>
-        )}
-        {game.href && <span className="play-chip">Play</span>}
-      </div>
-      <div className="game-info">
-        <strong>{game.title}</strong>
-        <span>{game.href ? "Ready to play" : "Coming soon"}</span>
-      </div>
-    </>
-  );
-
-  return game.href ? (
+  return (
     <a
       className="game-card game-card--live"
       href={game.href}
@@ -51,10 +26,15 @@ function GameCard({ game }: { game: (typeof games)[number] }) {
       rel="noreferrer"
       aria-label={`Open ${game.title} in a new tab`}
     >
-      {content}
+      <div className="game-art">
+        <img src={game.image} alt="" />
+        <span className="play-chip">Play</span>
+      </div>
+      <div className="game-info">
+        <strong>{game.title}</strong>
+        <span>Ready to play</span>
+      </div>
     </a>
-  ) : (
-    <article className="game-card game-card--empty">{content}</article>
   );
 }
 
@@ -72,7 +52,7 @@ export default function Home() {
           </div>
         </div>
         <p className="library-count">
-          <strong>2</strong> playable <span>·</span> 10 coming soon
+          <strong>{games.length}</strong> playable
         </p>
       </header>
 

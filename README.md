@@ -24,5 +24,14 @@ Production verification:
 
 ```bash
 npm run build
-node --test tests/rendered-html.test.mjs
+npm run pages:prepare
+npm run test:artifact
+npm run lint
 ```
+
+## Adding a game
+
+1. Add a 16:10 WebP cover to `public/games/`.
+2. Add the game's number, title, public URL, and cover path to the `games` array in `app/page.tsx`.
+3. Run the production verification commands above.
+4. Push to `main`. GitHub Actions will build the site, deploy it to Pages, and run a live smoke test.
